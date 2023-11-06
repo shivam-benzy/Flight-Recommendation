@@ -1,0 +1,180 @@
+<!-- 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Flight Recommendation System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            color: #3455FF;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        #outputSection {
+            display: none;
+            margin-top: 20px;
+            padding: 10px;
+            background: #f4f4f4;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to the Flight Recommendation System</h1>
+    <p>Enter your preferences to get flight recommendations:</p>
+    <form id="inputForm">
+        <label for="input1">User ID (Number): </label>
+        <input type="number" id="input1" name="input1"><br><br>
+        <label for="input2">Destination (String): </label>
+        <input type="text" id="input2" name="input2"><br><br>
+        <button type="button" onclick="sendData()">Get Recommendations</button>
+    </form>
+    <div id="outputSection">
+        <h2>Flight Recommendations:</h2>
+        <ul id="flightList"></ul>
+    </div>
+
+    <script>
+        function sendData() {
+            const input1 = document.getElementById('input1').value;
+            const input2 = document.getElementById('input2').value;
+
+            fetch('/process_inputs/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ input1, input2 })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Update the HTML to display the recommendations
+                const flightList = document.getElementById('flightList');
+                flightList.innerHTML = '';
+                data.forEach(flight => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = flight;
+                    flightList.appendChild(listItem);
+                });
+                document.getElementById('outputSection').style.display = 'block';
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
+
+
+ -->
+
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Flight Recommendation System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            color: #3455FF;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        #outputSection {
+            display: none;
+            margin-top: 20px;
+            padding: 10px;
+            background: #f4f4f4;
+            border-radius: 5px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to the Flight Recommendation System</h1>
+    <p>Enter your preferences to get flight recommendations:</p>
+    <form id="inputForm">
+        <label for="input1">User ID (Number): </label>
+        <input type="number" id="input1" name="input1"><br><br>
+        <label for="input2">Destination (String): </label>
+        <input type="text" id="input2" name="input2"><br><br>
+        <button type="button" onclick="sendData()">Get Recommendations</button>
+    </form>
+    <div id="outputSection">
+        <h2>Flight Recommendations:</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Flight ID</th>
+                    <th>Airline Name</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Class</th>
+                    <th>Meals Provided</th>
+                </tr>
+            </thead>
+            <tbody id="flightTableBody"></tbody>
+        </table>
+    </div>
+
+    <script>
+        function sendData() {
+            const input1 = document.getElementById('input1').value;
+            const input2 = document.getElementById('input2').value;
+
+            fetch('/process_inputs/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ input1, input2 })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const flightTableBody = document.getElementById('flightTableBody');
+                flightTableBody.innerHTML = '';
+
+                data.forEach(flightData => {
+                    const details = flightData.split(':');
+                    const meals = details[5] === '1' ? 'Yes' : 'No';
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${details[0]}</td>
+                        <td>${details[1]}</td>
+                        <td>${details[2]}</td>
+                        <td>${details[3]}</td>
+                        <td>${details[4]}</td>
+                        <td>${meals}</td>
+
+                    `;
+                    flightTableBody.appendChild(row);
+                });
+                
+                document.getElementById('outputSection').style.display = 'block';
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
+
+ 
